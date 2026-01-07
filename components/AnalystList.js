@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import Link from 'next/link' // <--- 1. We import Link here
+import Link from 'next/link'
 import { supabase } from '../lib/supabaseClient'
 
 export default function AnalystList({ keyProp }) {
@@ -23,6 +23,30 @@ export default function AnalystList({ keyProp }) {
       setAnalysts(sortedData)
     }
     setLoading(false)
+  }
+
+  // --- NEW: DELETE FUNCTION ---
+  const deleteAnalyst = async (e, id) => {
+    // 1. Stop the click from triggering the Link navigation
+    e.preventDefault() 
+    e.stopPropagation()
+
+    // 2. Confirm user intent
+    if (!window.confirm("Are you sure you want to delete this analyst?")) return
+
+    // 3. Delete from Supabase
+    const { error } = await supabase
+      .from('analysts')
+      .delete()
+      .eq('id', id)
+
+    if (error) {
+      alert('Error deleting analyst')
+      console.error(error)
+    } else {
+      // 4. Update UI immediately (Filter out the deleted ID)
+      setAnalysts((prev) => prev.filter((item) => item.id !== id))
+    }
   }
 
   // --- LOGIC HELPERS ---
@@ -51,8 +75,6 @@ export default function AnalystList({ keyProp }) {
     })
   }
 
-  // --- UI HELPERS ---
-
   const renderBadge = (status) => {
     if (status === 'OVERDUE') {
       return <span className="px-2 py-1 text-xs font-bold rounded bg-red-100 text-red-800 border border-red-200">Overdue</span>
@@ -72,24 +94,35 @@ export default function AnalystList({ keyProp }) {
         const daysAgo = getDaysElapsed(item.last_contact_date)
 
         return (
-          // <--- 2. The Link starts here and wraps the entire card
-          <Link href={`/analyst/${item.id}`} key={item.id} className="block group"> 
+          <Link href={`/analyst/${item.id}`} key={item.id} className="block group relative"> 
             
             <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 group-hover:shadow-md group-hover:border-blue-300 transition-all relative overflow-hidden h-full">
               
-              {/* Color Bar */}
+              {/* Status Color Bar */}
               <div className={`absolute left-0 top-0 bottom-0 w-1 ${
                 status === 'OVERDUE' ? 'bg-red-500' : 
                 status === 'NEEDS_UPDATE' ? 'bg-yellow-400' : 'bg-green-500'
               }`}></div>
 
-              <div className="flex justify-between items-start mb-2 pl-2">
+              {/* Header: Name and Badge */}
+              <div className="flex justify-between items-start mb-2 pl-2 pr-6"> {/* Added pr-6 to make room for delete button */}
                 <div>
                   <h3 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{item.name}</h3>
                   <p className="text-sm text-gray-500 font-medium">{item.firm}</p>
                 </div>
                 {renderBadge(status)}
               </div>
+
+              {/* NEW: Delete Button (Top Right) */}
+              <button
+                onClick={(e) => deleteAnalyst(e, item.id)}
+                className="absolute top-2 right-2 p-1.5 text-gray-300 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors z-10"
+                title="Delete Analyst"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
               
               <div className="mt-4 space-y-2 pl-2">
                 <div className="flex justify-between items-center text-sm">
