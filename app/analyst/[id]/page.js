@@ -9,7 +9,7 @@ export default function AnalystDetail({ params }) {
 
   const [analyst, setAnalyst] = useState(null)
   const [interactions, setInteractions] = useState([])
-  const [mentions, setMentions] = useState([]) // Renamed for clarity
+  const [mentions, setMentions] = useState([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('interactions')
   
@@ -24,10 +24,10 @@ export default function AnalystDetail({ params }) {
   // Mention Form State
   const [isMentionFormOpen, setIsMentionFormOpen] = useState(false)
   const [mentionData, setMentionData] = useState({
-    title: '', // Report Name
+    title: '',
     date: new Date().toISOString().split('T')[0],
     url: '',
-    summary: '' // The content of the mention
+    summary: ''
   })
 
   useEffect(() => {
@@ -53,7 +53,7 @@ export default function AnalystDetail({ params }) {
       .order('date', { ascending: false })
     setInteractions(interactionData || [])
 
-    // 3. Fetch Mentions (Stored in 'reports' table)
+    // 3. Fetch Mentions
     const { data: reportData } = await supabase
       .from('reports')
       .select('*')
@@ -158,12 +158,28 @@ export default function AnalystDetail({ params }) {
                 <h3 className="font-bold text-lg mb-4">New Interaction</h3>
                 <form onSubmit={handleSaveInteraction} className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
-                    <input type="date" required className="border p-2 rounded" value={interactionData.date} onChange={e => setInteractionData({...interactionData, date: e.target.value})} />
-                    <select className="border p-2 rounded bg-white" value={interactionData.type} onChange={e => setInteractionData({...interactionData, type: e.target.value})}>
+                    {/* Fixed Input Colors */}
+                    <input 
+                      type="date" required 
+                      className="border p-2 rounded bg-white text-gray-900 w-full" 
+                      value={interactionData.date} 
+                      onChange={e => setInteractionData({...interactionData, date: e.target.value})} 
+                    />
+                    <select 
+                      className="border p-2 rounded bg-white text-gray-900 w-full" 
+                      value={interactionData.type} 
+                      onChange={e => setInteractionData({...interactionData, type: e.target.value})}
+                    >
                       <option>Call</option><option>Email</option><option>Meeting</option>
                     </select>
                   </div>
-                  <textarea required rows="2" className="w-full border p-2 rounded" placeholder="Notes..." value={interactionData.notes} onChange={e => setInteractionData({...interactionData, notes: e.target.value})}></textarea>
+                  <textarea 
+                    required rows="2" 
+                    className="w-full border p-2 rounded bg-white text-gray-900" 
+                    placeholder="Notes..." 
+                    value={interactionData.notes} 
+                    onChange={e => setInteractionData({...interactionData, notes: e.target.value})}
+                  ></textarea>
                   <div className="flex justify-end space-x-2">
                     <button type="button" onClick={() => setIsInteractionFormOpen(false)} className="px-4 py-2 text-gray-600">Cancel</button>
                     <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">Save</button>
@@ -206,20 +222,44 @@ export default function AnalystDetail({ params }) {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-bold text-gray-500 mb-1">Report Name</label>
-                      <input required type="text" className="w-full border p-2 rounded" placeholder="e.g. Magic Quadrant for Cloud AI" value={mentionData.title} onChange={e => setMentionData({...mentionData, title: e.target.value})} />
+                      {/* Fixed Input Colors */}
+                      <input 
+                        required type="text" 
+                        className="w-full border p-2 rounded bg-white text-gray-900" 
+                        placeholder="e.g. Magic Quadrant for Cloud AI" 
+                        value={mentionData.title} 
+                        onChange={e => setMentionData({...mentionData, title: e.target.value})} 
+                      />
                     </div>
                     <div>
                       <label className="block text-xs font-bold text-gray-500 mb-1">Published Date</label>
-                      <input type="date" required className="w-full border p-2 rounded" value={mentionData.date} onChange={e => setMentionData({...mentionData, date: e.target.value})} />
+                      <input 
+                        type="date" required 
+                        className="w-full border p-2 rounded bg-white text-gray-900" 
+                        value={mentionData.date} 
+                        onChange={e => setMentionData({...mentionData, date: e.target.value})} 
+                      />
                     </div>
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-gray-500 mb-1">Report Link (Optional)</label>
-                    <input type="url" className="w-full border p-2 rounded" placeholder="https://gartner.com/..." value={mentionData.url} onChange={e => setMentionData({...mentionData, url: e.target.value})} />
+                    <input 
+                      type="url" 
+                      className="w-full border p-2 rounded bg-white text-gray-900" 
+                      placeholder="https://gartner.com/..." 
+                      value={mentionData.url} 
+                      onChange={e => setMentionData({...mentionData, url: e.target.value})} 
+                    />
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-gray-500 mb-1">Mention Details / Quote</label>
-                    <textarea rows="3" className="w-full border p-2 rounded" placeholder="e.g. They highlighted our new feature as a market differentiator..." value={mentionData.summary} onChange={e => setMentionData({...mentionData, summary: e.target.value})}></textarea>
+                    <textarea 
+                      rows="3" 
+                      className="w-full border p-2 rounded bg-white text-gray-900" 
+                      placeholder="e.g. They highlighted our new feature as a market differentiator..." 
+                      value={mentionData.summary} 
+                      onChange={e => setMentionData({...mentionData, summary: e.target.value})}
+                    ></textarea>
                   </div>
                   <div className="flex justify-end space-x-2">
                     <button type="button" onClick={() => setIsMentionFormOpen(false)} className="px-4 py-2 text-gray-600">Cancel</button>
