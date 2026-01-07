@@ -24,3 +24,11 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+/* ... keep all the code above ... */
+
+/* FORCE INPUTS TO BE READABLE */
+input, textarea, select {
+  color: #000000 !important;       /* Force text black */
+  background-color: #ffffff !important; /* Force background white */
+  border: 1px solid #d1d5db !important; /* Add a gray border so you can see them */
+}
