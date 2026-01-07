@@ -75,7 +75,6 @@ export default function AnalystDetail({ params }) {
     }])
     if (error) alert('Error saving interaction')
     else {
-      // Update parent date logic
       const current = analyst.last_contact_date ? new Date(analyst.last_contact_date) : new Date('1970-01-01');
       const newDate = new Date(interactionData.date);
       if (newDate >= current) {
@@ -107,8 +106,8 @@ export default function AnalystDetail({ params }) {
     }
   }
 
-  if (loading) return <div className="p-8 text-center">Loading profile...</div>
-  if (!analyst) return <div className="p-8 text-center">Analyst not found</div>
+  if (loading) return <div className="p-8 text-center text-gray-800">Loading profile...</div>
+  if (!analyst) return <div className="p-8 text-center text-gray-800">Analyst not found</div>
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -155,27 +154,32 @@ export default function AnalystDetail({ params }) {
               </button>
             ) : (
               <div className="bg-white p-6 rounded-lg shadow-lg border border-blue-100 mb-8">
-                <h3 className="font-bold text-lg mb-4">New Interaction</h3>
+                <h3 className="font-bold text-lg mb-4 text-gray-900">New Interaction</h3>
                 <form onSubmit={handleSaveInteraction} className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
-                    {/* Fixed Input Colors */}
+                    {/* Fixed Input Colors with Inline Styles */}
                     <input 
                       type="date" required 
-                      className="border p-2 rounded bg-white text-gray-900 w-full" 
+                      className="border p-2 rounded bg-white w-full" 
+                      style={{ color: 'black' }}
                       value={interactionData.date} 
                       onChange={e => setInteractionData({...interactionData, date: e.target.value})} 
                     />
                     <select 
-                      className="border p-2 rounded bg-white text-gray-900 w-full" 
+                      className="border p-2 rounded bg-white w-full" 
+                      style={{ color: 'black' }}
                       value={interactionData.type} 
                       onChange={e => setInteractionData({...interactionData, type: e.target.value})}
                     >
-                      <option>Call</option><option>Email</option><option>Meeting</option>
+                      <option value="Call">Call</option>
+                      <option value="Email">Email</option>
+                      <option value="Meeting">Meeting</option>
                     </select>
                   </div>
                   <textarea 
                     required rows="2" 
-                    className="w-full border p-2 rounded bg-white text-gray-900" 
+                    className="w-full border p-2 rounded bg-white" 
+                    style={{ color: 'black' }}
                     placeholder="Notes..." 
                     value={interactionData.notes} 
                     onChange={e => setInteractionData({...interactionData, notes: e.target.value})}
@@ -222,10 +226,10 @@ export default function AnalystDetail({ params }) {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-bold text-gray-500 mb-1">Report Name</label>
-                      {/* Fixed Input Colors */}
                       <input 
                         required type="text" 
-                        className="w-full border p-2 rounded bg-white text-gray-900" 
+                        className="w-full border p-2 rounded bg-white" 
+                        style={{ color: 'black' }}
                         placeholder="e.g. Magic Quadrant for Cloud AI" 
                         value={mentionData.title} 
                         onChange={e => setMentionData({...mentionData, title: e.target.value})} 
@@ -235,7 +239,8 @@ export default function AnalystDetail({ params }) {
                       <label className="block text-xs font-bold text-gray-500 mb-1">Published Date</label>
                       <input 
                         type="date" required 
-                        className="w-full border p-2 rounded bg-white text-gray-900" 
+                        className="w-full border p-2 rounded bg-white" 
+                        style={{ color: 'black' }}
                         value={mentionData.date} 
                         onChange={e => setMentionData({...mentionData, date: e.target.value})} 
                       />
@@ -245,7 +250,8 @@ export default function AnalystDetail({ params }) {
                     <label className="block text-xs font-bold text-gray-500 mb-1">Report Link (Optional)</label>
                     <input 
                       type="url" 
-                      className="w-full border p-2 rounded bg-white text-gray-900" 
+                      className="w-full border p-2 rounded bg-white" 
+                      style={{ color: 'black' }}
                       placeholder="https://gartner.com/..." 
                       value={mentionData.url} 
                       onChange={e => setMentionData({...mentionData, url: e.target.value})} 
@@ -255,7 +261,8 @@ export default function AnalystDetail({ params }) {
                     <label className="block text-xs font-bold text-gray-500 mb-1">Mention Details / Quote</label>
                     <textarea 
                       rows="3" 
-                      className="w-full border p-2 rounded bg-white text-gray-900" 
+                      className="w-full border p-2 rounded bg-white" 
+                      style={{ color: 'black' }}
                       placeholder="e.g. They highlighted our new feature as a market differentiator..." 
                       value={mentionData.summary} 
                       onChange={e => setMentionData({...mentionData, summary: e.target.value})}
